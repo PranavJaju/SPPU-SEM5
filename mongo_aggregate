@@ -1,0 +1,97 @@
+>db.emp.insert({name:"Pranav",age:45,salary:100000000,dept:2,phone:87945612358})
+
+>db.emp.insertMany([{name:"Vinit",age:40,salary:100000,dept:1,phone:8795612358},{name:"Londe",age:65,salary:192000,dept:2,phone:87945614358},{name:"More",age:45,salary:800000,dept:3,phone:87936612358},{name:"Vidhur",age:45,salary:30000000,dept:3,phone:87945612358},{name:"Mahan",age:45,salary:50000000,dept:1,phone:87945612998},{name:"Striver",age:11,salary:0600000,dept:4,phone:66945612358},{name:"MAlu",age:92,salary:190000,dept:4,phone:14545612358},{name:"Love",age:77,salary:180099,dept:2,phone:69945612358}])
+
+>db.emp.find()
+{ "_id" : ObjectId("652f53af7e930af9dcf19eaf"), "name" : "Pranav", "age" : 45, "salary" : 100000000, "dept" : 2, "phone" : 87945612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb0"), "name" : "Vinit", "age" : 40, "salary" : 100000, "dept" : 1, "phone" : 8795612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb1"), "name" : "Londe", "age" : 65, "salary" : 192000, "dept" : 2, "phone" : 87945614358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb2"), "name" : "More", "age" : 45, "salary" : 800000, "dept" : 3, "phone" : 87936612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb3"), "name" : "Vidhur", "age" : 45, "salary" : 30000000, "dept" : 3, "phone" : 87945612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb4"), "name" : "Mahan", "age" : 45, "salary" : 50000000, "dept" : 1, "phone" : 87945612998 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb5"), "name" : "Striver", "age" : 11, "salary" : 196608, "dept" : 4, "phone" : 66945612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb6"), "name" : "MAlu", "age" : 92, "salary" : 190000, "dept" : 4, "phone" : 14545612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb7"), "name" : "Love", "age" : 77, "salary" : 180099, "dept" : 2, "phone" : 69945612358 }
+
+
+> db.emp.aggregate([{$group : {_id:"$dept"}}])
+{ "_id" : 2 }
+{ "_id" : 1 }
+{ "_id" : 4 }
+{ "_id" : 3 }
+
+>db.emp.aggregate([{ $group: {_id: "$dept",salary: { $sum: "$salary"} }} ])
+{ "_id" : 2, "salary" : 100372099 }
+{ "_id" : 1, "salary" : 50100000 }
+{ "_id" : 3, "salary" : 30800000 }
+{ "_id" : 4, "salary" : 386608 }
+
+>db.emp.aggregate([ { $match : { dept:1}}])
+{ "_id" : ObjectId("652f54327e930af9dcf19eb0"), "name" : "Vinit", "age" : 40, "salary" : 100000, "dept" : 1, "phone" : 8795612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb4"), "name" : "Mahan", "age" : 45, "salary" : 50000000, "dept" : 1, "phone" : 87945612998 }
+
+
+>db.emp.aggregate([ {$match : {dept:2}}])
+{ "_id" : ObjectId("652f53af7e930af9dcf19eaf"), "name" : "Pranav", "age" : 45, "salary" : 100000000, "dept" : 2, "phone" : 87945612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb1"), "name" : "Londe", "age" : 65, "salary" : 192000, "dept" : 2, "phone" : 87945614358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb7"), "name" : "Love", "age" : 77, "salary" : 180099, "dept" : 2, "phone" : 69945612358 }
+
+>db.emp.aggregate([ {$match : {dept:2}},{$limit : 1}])
+{ "_id" : ObjectId("652f53af7e930af9dcf19eaf"), "name" : "Pranav", "age" : 45, "salary" : 100000000, "dept" : 2, "phone" : 87945612358 }
+
+
+>db.emp.aggregate([{$sort : {salary : -1}},{$limit : 5}])
+{ "_id" : ObjectId("652f53af7e930af9dcf19eaf"), "name" : "Pranav", "age" : 45, "salary" : 100000000, "dept" : 2, "phone" : 87945612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb4"), "name" : "Mahan", "age" : 45, "salary" : 50000000, "dept" : 1, "phone" : 87945612998 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb3"), "name" : "Vidhur", "age" : 45, "salary" : 30000000, "dept" : 3, "phone" : 87945612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb2"), "name" : "More", "age" : 45, "salary" : 800000, "dept" : 3, "phone" : 87936612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb5"), "name" : "Striver", "age" : 11, "salary" : 196608, "dept" : 4, "phone" : 66945612358 }
+
+> db.emp.aggregate([{$sort : {salary : 1}},{$limit : 5}])
+{ "_id" : ObjectId("652f54327e930af9dcf19eb0"), "name" : "Vinit", "age" : 40, "salary" : 100000, "dept" : 1, "phone" : 8795612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb7"), "name" : "Love", "age" : 77, "salary" : 180099, "dept" : 2, "phone" : 69945612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb6"), "name" : "MAlu", "age" : 92, "salary" : 190000, "dept" : 4, "phone" : 14545612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb1"), "name" : "Londe", "age" : 65, "salary" : 192000, "dept" : 2, "phone" : 87945614358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb5"), "name" : "Striver", "age" : 11, "salary" : 196608, "dept" : 4, "phone" : 66945612358 }
+
+> db.emp.aggregate([{$project: {"name":1,"age":1,"phone":1}}])
+{ "_id" : ObjectId("652f53af7e930af9dcf19eaf"), "name" : "Pranav", "age" : 45, "phone" : 87945612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb0"), "name" : "Vinit", "age" : 40, "phone" : 8795612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb1"), "name" : "Londe", "age" : 65, "phone" : 87945614358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb2"), "name" : "More", "age" : 45, "phone" : 87936612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb3"), "name" : "Vidhur", "age" : 45, "phone" : 87945612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb4"), "name" : "Mahan", "age" : 45, "phone" : 87945612998 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb5"), "name" : "Striver", "age" : 11, "phone" : 66945612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb6"), "name" : "MAlu", "age" : 92, "phone" : 14545612358 }
+{ "_id" : ObjectId("652f54327e930af9dcf19eb7"), "name" : "Love", "age" : 77, "phone" : 69945612358 }
+
+>  db.emp.aggregate([{$match: {dept:2}},{$project: {"dept":1}},{$count : "DEPT2_Workers_count"}])
+{ "DEPT2_Workers_count" : 3 }
+
+>db.emp.aggregate([{$match: {dept: 2 } },{$group: { _id: "$dept",Workers_count: {$sum: 1}}}])
+{ "_id" : 2, "Workers_count" : 3 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
