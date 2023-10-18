@@ -1,0 +1,36 @@
+import string
+from pymongo import MongoClient
+
+client = MongoClient("mongodb://localhost:27017")
+mydatabase = client['db']
+mycollection = mydatabase['emp']
+
+
+
+# Find and print documents in the collection
+
+
+while(True):
+    print("Select one of the option : \n1. Write\n2. read \n3.Delete")
+    a = int(input())
+    if(a==1):
+        print("name : age : salary :dept : phone : ")
+        name = input()
+        age = int(input())
+        salary = int(input())
+        dept = int(input())
+        phone = input()
+        record = {"name": name, "age": age, "salary": salary, "dept": dept, "phone": phone}
+        rec = mycollection.insert_one(record)
+        print("Inserted ID:", rec.inserted_id)
+    elif(a==2):
+        documents = mycollection.find()
+        for document in documents:
+            print(document)
+    elif(a==3):
+        result = mycollection.delete_many({})
+        print("Number of documents deleted:", result.deleted_count)
+    else:
+        break
+
+
