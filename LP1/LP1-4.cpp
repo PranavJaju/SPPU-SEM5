@@ -38,7 +38,59 @@ int fifo(vector<int> page_references, int frame_count) {
 
     return page_faults;
 }
+int optimal(vector<int> page_references, int frame_count) {
+    list<int> memory;
+    unordered_map<int, list<int>::iterator> memory_map;
+    int page_faults = 0;
 
+    for (int i = 0; i < page_references.size(); i++) {
+        int page = page_references[i];
+        if (memory_map.find(page) == memory_map.end()) {
+            if (memory.size() >= frame_count) {
+                int farthest_occurrence = -1;
+                int page_to_replace;
+
+                for (auto it = memory.begin(); it != memory.end(); ++it) {
+                    int current_page = *it;
+                    int next_occurrence = -1;
+
+                    for (int j = i + 1; j < page_references.size(); j++) {
+                        if (page_references[j] == current_page) {
+                            next_occurrence = j;
+                            break;
+                        }
+                    }
+
+                    if (next_occurrence == -1) {
+                        page_to_replace = current_page;
+                        break;
+                    }
+
+                    if (next_occurrence > farthest_occurrence) {
+                        farthest_occurrence = next_occurrence;
+                        page_to_replace = current_page;
+                    }
+                }
+
+                memory_map.erase(page_to_replace);
+                memory.remove(page_to_replace);
+            }
+
+            memory.push_front(page);
+            memory_map[page] = memory.begin();
+            page_faults++;
+        }
+
+        cout << "Page References: " << page << endl;
+        cout << "Memory: ";
+        for (int p : memory) {
+            cout << p << " ";
+        }
+        cout << endl;
+    }
+
+    return page_faults;
+}
 int lru(vector<int> page_references, int frame_count) {
     list<int> memory;
     unordered_map<int, list<int>::iterator> memory_map;
@@ -80,6 +132,11 @@ int main() {
     	cin>>c;
 	}
     int frame_count = 3;
+    
+    cout<<"Give which page replacement : \n1.FIFO\n2.LRU\n3.Optimal";
+    cin>>c;
+    if(c==1){
+	
     cout<<"\n====================FIFO==========================\n\n";
 
     int page_faults = fifo(page_references, frame_count);
@@ -87,12 +144,22 @@ int main() {
 
     cout<< "=-=-=-=->>    Total Page Faults: " << page_faults <<endl;
     
+}
+    else if(c==2){
+	
     cout<<"\n===================Least Recently Used===========================\n\n";
     
-    page_faults = lru(page_references,frame_count);
+    int page_faults = lru(page_references,frame_count);
     
     cout << "=-=-=-=->>    Total Page Faults: " << page_faults << endl;
-
+}
+ else if (c==3){
+ 	cout<<"\n===================Optimal===========================\n\n";
+    
+   int page_faults = optimal(page_references,frame_count);
+    
+    cout << "=-=-=-=->>    Total Page Faults: " << page_faults << endl;
+ }
     return 0;
 }
 
